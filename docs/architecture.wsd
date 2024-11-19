@@ -1,0 +1,56 @@
+@startuml architecture
+package "Data acquisition" as da {
+    component "Platesmania.com" as da_pl
+    component "Other online sources" as da_os
+    component "Self-collected" as da_sc
+    cloud "Data Pool" as da_po
+    component "Data Pre-Processing" as da_pp
+    cloud "Ready Data" as da_rd
+}
+
+package "ROI extraction" as ro {
+    component "ROI Classifier" as ro_rc
+    cloud "Extracted ROIs" as ro_er
+    cloud "Performance Metrics" as ro_pm
+}
+
+package "Optical character recognition" as oc {
+    component "OCR Classifier" as oc_oe
+    cloud "Extracted Text" as oc_et
+    cloud "Performance Metrics" as oc_pm
+}
+
+package "Results Evaluation" as re {
+    component "Text Check" as re_tc
+    component "ROI classification evaluation" as re_rc
+    component "OCR classification evaluation" as re_oc
+    component "Total evaluation" as re_te
+    component "Data Visualization and GUI" as re_fv
+}
+
+da_po <-r- da_pl
+da_po <-l- da_os
+da_po <-- da_sc
+da_po -u-> da_pp
+da_pp -u-> da_rd
+
+ro_rc <-- da_rd
+ro_er <-r- ro_rc
+ro_pm <-- ro_rc
+
+oc_oe <-l- ro_er
+oc_et <-- oc_oe
+oc_pm <-- oc_oe
+
+re_tc <-- oc_et
+re_te <-- re_tc
+re_te <-- re_rc
+re_te <-- re_oc
+re_fv <-- re_te
+re_fv <-- re_tc
+
+re_rc <. ro_pm
+re_oc <. oc_pm
+
+
+@enduml
