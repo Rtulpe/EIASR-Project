@@ -12,8 +12,9 @@ def process_image(image_path):
     :return: feature vector 
     """""
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    # TODO: Turn into same sized image
-    edges = cv2.Canny(image, 100, 200)  # Turn into binary edges
+    image = cv2.resize(image, (25, 45))  # TODO: Check if this works correctly
+    edges = cv2.Canny(image, 100, 200)  # Find edges
+    _, binary = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)  # also turn into binary edges
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # only external contours
     if contours:  # There might not be any
         contour = max(contours, key=cv2.contourArea)  # Assume the largest contour corresponds to the letter/number
@@ -29,11 +30,15 @@ def process_image(image_path):
         solidity = area / hull_area if hull_area != 0 else 0
         moments = cv2.moments(contour)
         hu_moments = cv2.HuMoments(moments).flatten()
+        horizontal_projection = np.sum(binary == 0, axis=1)  # Sum of black pixels in each row
+        vertical_projection = np.sum(binary == 0, axis=0)  # Sum of black pixels in each column
 
         # Maybe add projects on the axes and distance from bottom/sides to black pixels
 
-        print(f"{image_path}: Got area {normalized_area}, perimeter {perimeter}, solidity {solidity} and complexity {shape_complexity}")
-        return [normalized_area, perimeter, solidity, shape_complexity] + hu_moments.tolist()
+        print(f"{image_path}: Got area {normalized_area}, perimeter {perimeter}, solidity {solidity}, "
+              f"and complexity {shape_complexity}")
+        return ([normalized_area, perimeter, solidity, shape_complexity]
+                + hu_moments.tolist() + horizontal_projection.tolist() + vertical_projection.tolist())
 
 
 def train_knn(knn):
