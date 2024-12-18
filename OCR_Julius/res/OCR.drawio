@@ -1,0 +1,55 @@
+<mxfile host="Electron" modified="2024-12-03T10:34:32.070Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.1 Chrome/112.0.5615.204 Electron/24.6.1 Safari/537.36" etag="bHQ0Xf0YoyPJPzBQexkL" version="21.6.1" type="device">
+  <diagram name="Seite-1" id="YfLTTbZvfEf-cA0CqAIG">
+    <mxGraphModel dx="1019" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-1" target="vG2yWr-Obkva-g2qk9iD-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-1" value="Turn into Grayscale" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="280" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-2" target="vG2yWr-Obkva-g2qk9iD-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-2" value="Image of single&amp;nbsp;&lt;br&gt;Character" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="160" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-4" target="vG2yWr-Obkva-g2qk9iD-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-4" value="Use Canny" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="360" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-5" target="vG2yWr-Obkva-g2qk9iD-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-6" target="vG2yWr-Obkva-g2qk9iD-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-5" value="Find Contours" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-6" target="vG2yWr-Obkva-g2qk9iD-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-6" value="Extract Features" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="520" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vG2yWr-Obkva-g2qk9iD-7" target="vG2yWr-Obkva-g2qk9iD-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-7" value="Predict with KNN" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="600" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-12" value="Label of the&amp;nbsp;&lt;br&gt;Character" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="680" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vG2yWr-Obkva-g2qk9iD-14" value="Namely:&lt;br&gt;&lt;br&gt;Normalized Area&lt;br&gt;Perimeter&lt;br&gt;Perimeter² / Area&lt;br&gt;Area / Hull-Area&lt;br&gt;hu moments" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="560" y="460" width="170" height="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
