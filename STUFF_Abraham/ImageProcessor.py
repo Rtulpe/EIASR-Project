@@ -47,6 +47,7 @@ cv2.imwrite('.preprocess/4_BlackWhite.jpg', image_process_bw)
 
 #Bounding Box Mask
 
+
 _, labels = cv2.connectedComponents(image_process_bw)
 mask = np.zeros(image_process_bw.shape, dtype="uint8")
 
@@ -56,6 +57,7 @@ lower = total_pixels // 100 # heuristic param, can be fine tuned if necessary
 upper = total_pixels // 10 # heuristic param, can be fine tuned if necessary
 upper_width = 100 # Max Width to ~100px
 
+identified_character_components =[] #List to Reorder
 # Loop over the unique components
 for (i, label) in enumerate(np.unique(labels)):
     # If this is the background label, ignore it
@@ -74,11 +76,42 @@ for (i, label) in enumerate(np.unique(labels)):
     # add it to our mask
     if lower < numPixels < upper and w < upper_width:
         mask = cv2.add(mask, labelMask)
+        #Process Image to Reorder
+        maskcropped = image_process_bw[y:y+h,x:x+w]
+        identified_character_components.append((x,maskcropped))
 
 cv2.imwrite('.preprocess/5_ObjectMask.jpg', mask)
 
 
-#Show Bounding Box
+#REORDER CHARACTERS
+#function to get the first element
+def takeFirstElm(ele):
+    return ele[0]
+
+#function to order the array using the first element(x-axis)
+def reorder_first_index(list):
+  return sorted(list,key=takeFirstElm)
+
+ordered_elements = reorder_first_index(identified_character_components)
+
+#removing the x-axis from the elements
+ordered_character_components=[]
+for element in ordered_elements:
+  ordered_character_components.append(element[1])# appending only the image pixels(removing added index in earlier steps)
+
+for character in ordered_character_components:
+    cv2.imshow('image',character)
+    cv2.waitKey(0)
+
+
+
+
+
+
+
+
+
+#SAMPLE DEMO Show Bounding Box
 
 # Get each bounding box
 # Find the big contours/blobs on the filtered image:
