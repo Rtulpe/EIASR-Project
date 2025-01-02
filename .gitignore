@@ -2,6 +2,5 @@
 !.gitignore
 .DS_Store
 Scraper_Rustenis/results/*
-ROI_Rustenis/Training
-ROI_Rustenis/Validation
+ROI_Rustenis/*/
 **/__pycache__/
