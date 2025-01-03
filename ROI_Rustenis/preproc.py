@@ -29,7 +29,7 @@ def parse_annotations(annotations_dir, images_dir):
         annotations.append((image_path, objects))
     return annotations
 
-def convert_to_yolo_format(annotations, output_dir, image_size):
+def convert_to_yolo_format(annotations, output_dir, image_size=(416, 416)):
     os.makedirs(output_dir, exist_ok=True)
     for image_path, objects in annotations:
         h, w = image_size
