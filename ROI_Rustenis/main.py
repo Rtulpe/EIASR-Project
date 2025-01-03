@@ -11,14 +11,23 @@ def postprocess_predictions(predictions, input_size=(416, 416), confidence_thres
     confidences = []
     class_probs = []
 
+    print(f"Predictions shape: {predictions.shape}")
+    print(f"Predictions type: {type(predictions)}")
+
     for i in range(predictions.shape[1]):  # Iterate over the grid cells (height)
         for j in range(predictions.shape[2]):  # Iterate over the grid cells (width)
             # Extract the prediction
             pred = predictions[0, i, j]  # We use [0] since it's a single image batch
 
+            print(f"Prediction shape: {pred.shape}")
+            print(f"Prediction type: {type(pred)}")
+
             # Extract the center coordinates, width, height, and confidence
             x_center, y_center, width, height, confidence = pred[:5]
             class_prob = pred[5:]
+
+            print(f"x_center: {x_center}, y_center: {y_center}, width: {width}, height: {height}, confidence: {confidence}")
+            print(f"class_prob: {class_prob}")
 
             # Only keep predictions with high confidence
             if confidence >= confidence_threshold:
@@ -41,8 +50,10 @@ def get_predictions(model, image, input_size=(416, 416)):
     predictions = model.predict(np.expand_dims(image, axis=0))
     
     # Post-process the predictions: extract bounding boxes, confidence, and class probabilities
+    print("Step 2: Post-processing the predictions")
     boxes, confidences, class_probs = postprocess_predictions(predictions, input_size)
     
+    print("Step 3: Returning the predictions")
     return boxes, confidences, class_probs
 
 # Define the function to draw bounding boxes
@@ -50,10 +61,13 @@ def draw_bounding_boxes(image_path, boxes, confidences, output_path="output_imag
     # Load the original image
     image = cv2.imread(image_path)
     
+    print(f"Drawing {len(boxes)} bounding boxes on {image_path}")
+
     # Draw each bounding box on the image
     for box, confidence in zip(boxes, confidences):
         xmin, ymin, xmax, ymax = box
-        
+        print(f"Bounding box: ({xmin}, {ymin}), ({xmax}, {ymax}) with confidence {confidence}")
+
         # Draw a rectangle around the license plate
         cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)  # Green rectangle
         
@@ -63,11 +77,13 @@ def draw_bounding_boxes(image_path, boxes, confidences, output_path="output_imag
 
     # Save the output image with bounding boxes
     cv2.imwrite(output_path, image)
-
+    print(f"Saved output image to {output_path}")
 
 # Load the trained YOLO model
+print("Loading model...")
 model = load_model('model.h5')
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+print("Model loaded and compiled.")
 
 # Main loop to iterate over all images in the Samples folder
 samples_folder = "Samples"
@@ -77,13 +93,14 @@ output_folder = "Output"
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-# Loop through all .jpg images in the Samples folder
+print("Processing images...")
+# Loop through all .png images in the Samples folder
 for filename in os.listdir(samples_folder):
-    print(f"Processing: {filename}")
     if filename.endswith(".png"):
         image_path = os.path.join(samples_folder, filename)
         
         try:
+            print(f"Processing {filename}...")
             # Step 1: Preprocess the image
             preprocessed_image = preprocess_image(image_path)
 
@@ -92,10 +109,11 @@ for filename in os.listdir(samples_folder):
 
             # Step 3: Draw bounding boxes on the image
             output_path = os.path.join(output_folder, f"output_{filename}")
-            print("Drawing bounding boxes...")
             draw_bounding_boxes(image_path, boxes, confidences, output_path)
 
             print(f"Processed and saved: {output_path}")
         
         except Exception as e:
             print(f"Error processing {filename}: {e}")
+
+print("Processing complete.")
