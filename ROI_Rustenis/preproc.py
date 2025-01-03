@@ -19,13 +19,12 @@ def parse_annotations(annotations_dir, images_dir):
         
         objects = []
         for obj in root.findall('object'):
-            label = obj.find('name').text
             bbox = obj.find('bndbox')
             xmin = int(bbox.find('xmin').text)
             ymin = int(bbox.find('ymin').text)
             xmax = int(bbox.find('xmax').text)
             ymax = int(bbox.find('ymax').text)
-            objects.append((label, xmin, ymin, xmax, ymax))
+            objects.append((xmin, ymin, xmax, ymax))
         
         annotations.append((image_path, objects))
     return annotations
@@ -38,12 +37,13 @@ def convert_to_yolo_format(annotations, output_dir, image_size):
         txt_path = os.path.join(output_dir, f"{image_name}.txt")
         
         with open(txt_path, 'w') as f:
-            for _, xmin, ymin, xmax, ymax in objects:
+            for xmin, ymin, xmax, ymax in objects:
                 class_id = 0  # Since only 'license' plates are labeled
                 x_center = ((xmin + xmax) / 2) / w
                 y_center = ((ymin + ymax) / 2) / h
                 width = (xmax - xmin) / w
                 height = (ymax - ymin) / h
+                print(f"{class_id} {x_center} {y_center} {width} {height}")
                 f.write(f"{class_id} {x_center} {y_center} {width} {height}\n")
 
 def preprocess_image(image_path, target_size=(416, 416)):
