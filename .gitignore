@@ -3,4 +3,5 @@
 .DS_Store
 Scraper_Rustenis/results/*
 ROI_Rustenis/*/
+!ROI_Rustenis/Tests/
 **/__pycache__/
