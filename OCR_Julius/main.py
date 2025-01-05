@@ -3,7 +3,11 @@ import os
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.multiclass import OneVsOneClassifier
+from sklearn.svm import LinearSVC
 
+usingBinary = True
+debug = False
 
 def process_image(image_path):
     """
@@ -12,9 +16,12 @@ def process_image(image_path):
     :return: feature vector 
     """""
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    image = cv2.resize(image, (25, 45))  # TODO: Check if this works correctly
-    edges = cv2.Canny(image, 100, 200)  # Find edges
+    if usingBinary:
+        image = cv2.resize(image, (50, 90))
+    else:
+        image = cv2.resize(image, (25, 45))  # TODO: Check if this works correctly
     _, binary = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)  # also turn into binary edges
+    edges = cv2.Canny(image, 100, 200)  # Find edges
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # only external contours
     if contours:  # There might not be any
         contour = max(contours, key=cv2.contourArea)  # Assume the largest contour corresponds to the letter/number
@@ -35,8 +42,9 @@ def process_image(image_path):
 
         # Maybe add projects on the axes and distance from bottom/sides to black pixels
 
-        print(f"{image_path}: Got area {normalized_area}, perimeter {perimeter}, solidity {solidity}, "
-              f"and complexity {shape_complexity}")
+        if debug:
+            print(f"{image_path}: Got area {normalized_area}, perimeter {perimeter}, solidity {solidity}, "
+                  f"and complexity {shape_complexity}")
         return ([normalized_area, perimeter, solidity, shape_complexity]
                 + hu_moments.tolist() + horizontal_projection.tolist() + vertical_projection.tolist())
 
@@ -48,8 +56,11 @@ def train_knn(knn):
     :return: nothing
     """
     # Define the path to your dataset
-    dataset_path = "InitialTrainingSet/"
-    # dataset_path = "Dataset/"
+    if usingBinary:
+        dataset_path = "Dataset/PreBinary/"
+    else:
+        dataset_path = "InitialTrainingSet/"
+    # dataset_path = "Dataset/Manual/"
 
     # Initialize lists to store features and labels
     features = []
@@ -57,6 +68,8 @@ def train_knn(knn):
 
     # Loop through each folder (label) in the dataset
     for label in os.listdir(dataset_path):
+        label_specific_features_list = []
+        label_specific_name_list = []
         label_path = os.path.join(dataset_path, label)
         if os.path.isdir(label_path):
             for image_name in os.listdir(label_path):
@@ -65,8 +78,28 @@ def train_knn(knn):
                 image_path = os.path.join(label_path, image_name)
 
                 # Append the feature vector and label
-                features.append(process_image(image_path))
+                feature_vector = process_image(image_path)
+                features.append(feature_vector)
                 labels.append(label)
+
+                label_specific_features_list.append(feature_vector)
+                label_specific_name_list.append(image_name)
+        np_features = np.array(label_specific_features_list, dtype=np.float32)
+        if debug:
+            print(label)
+            print(np_features.shape)
+        means = np_features.mean(axis=0)
+        variances = np_features.var(axis=0)
+        # Calculate bounds
+        lower_bound = means - 3 * variances
+        upper_bound = means + 3 * variances
+
+        # Check if each element in data is within bounds
+        boolean_array = (np_features >= lower_bound) & (np_features <= upper_bound)
+        if debug:
+            for i in range(1, boolean_array.shape[0]):
+                print(label_specific_name_list[i])
+                print(boolean_array[i])
 
     # TODO: For KNN features need to be normalized/standardized (mean=0, sigma=1)
 
@@ -74,7 +107,7 @@ def train_knn(knn):
     features = np.array(features, dtype=np.float32)
     labels = np.array(labels)
 
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, shuffle=True, random_state=42)
 
     # Train the classifier
     knn.fit(x_train, y_train)
@@ -106,7 +139,8 @@ def test_knn(knn):
 
 
 def main():
-    knn = KNeighborsClassifier(n_neighbors=3)  # Maybe replace with One v One Classifier
+    # knn = KNeighborsClassifier(n_neighbors=3)  # Maybe replace with One v One Classifier
+    knn = OneVsOneClassifier(LinearSVC(random_state=0))
     train_knn(knn)
     test_knn(knn)
 
