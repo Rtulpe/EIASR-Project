@@ -2,25 +2,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from lxml import etree
 
-def plot_with_bounding_box(img_path, bboxes, bb_format):
-    fig = plt.figure()
-    ax = fig.add_axes([0, 0, 1, 1])
-    image = plt.imread(img_path)
-    plt.imshow(image)
-    for _, bbox in enumerate(bboxes):
-        if bb_format == "xywh":
-            xc, yc, w, h = bbox
-            xmin = xc - (w/2)
-            ymin = yc - (h/2)
-        else:
-            xmin, ymin, xmax, ymax = bbox
-            w = xmax - xmin
-            h = ymax - ymin
-        box = patches.Rectangle((xmin, ymin), w, h, edgecolor="red", facecolor="none")
-        ax.add_patch(box)
-    plt.axis('off')
-    plt.savefig('Out/BoundingBoxes.png')
-
 def bounding_box_in_yolo_format(x1, y1, x2, y2, w, h):
     x1_new = x1/w
     x2_new = x2/w
