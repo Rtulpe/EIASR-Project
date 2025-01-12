@@ -2,4 +2,9 @@
 !.gitignore
 .DS_Store
 Scraper_Rustenis/results/*
+ROI_Rustenis/*/
+ROI_Rustenis/**/*.keras
+ROI_Rustenis/**/*.h5
+!ROI_Rustenis/Tests/
 **/__pycache__/
+
