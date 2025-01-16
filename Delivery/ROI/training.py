@@ -8,7 +8,8 @@ from ultralytics import YOLO
 root_dir = os.path.abspath(os.path.dirname(__file__))
 train_path = os.path.join(root_dir, 'Training')
 val_path = os.path.join(root_dir, 'Validation')
-model_path = 'weights.pt'
+model_path = os.path.join(root_dir, 'weights.pt')
+yaml_path = os.path.join(root_dir, 'data.yaml')
 
 def train_model(model: YOLO = None):
     check_folders()
@@ -19,8 +20,11 @@ def train_model(model: YOLO = None):
     annot_val_glob = get_globs('{}/annotations/*.xml'.format(val_path))
 
     if model is None:
-        print("Model not found, fetching a new one...")
-        model = YOLO('yolo11s.pt')
+        if os.path.exists(model_path):
+            print("Loading existing model")
+            model = YOLO(model_path)
+        else:
+            model = YOLO()
 
     print("Found {} training images and {} annotations".format(len(images_train_glob), len(annot_train_glob)))
     print("Found {} validation images and {} annotations".format(len(images_val_glob), len(annot_val_glob)))
@@ -49,10 +53,10 @@ def train_model(model: YOLO = None):
         nc=1,
         names={0: "car_licence_plate"}
     )
-    with open("data.yaml", "w") as ymlfile:
+    with open(yaml_path, "w") as ymlfile:
         yaml.dump(data, ymlfile, default_flow_style=False)
 
-    model.train(data='data.yaml',imgsz=320,epochs=85, amp=True)
+    model.train(data=yaml_path,imgsz=320,epochs=85, amp=True)
     model.save(model_path)
 
 
