@@ -22,20 +22,15 @@ def ProcessImage(array, image_input):
     # Uniformly Resize Image
     standardsize = (500,100)
     image_process_resize = cv2.resize(image_process_crop, standardsize, interpolation= cv2.INTER_LINEAR)
-    #cv2.imwrite('.preprocess/1_Normalize.jpg', image_process_resize)
 
     #Apply Smoothing with Gaussian Blur
     image_process_smooth = cv2.GaussianBlur(image_process_resize, (9, 9), 1)
-    #cv2.imwrite('.preprocess/2_Blur.jpg', image_process_smooth)
 
     #Preprocess Image to GrayScale
     image_process_gray= cv2.cvtColor(image_process_smooth, cv2.COLOR_BGR2GRAY)
-    #cv2.imwrite('.preprocess/3_Grayscale.jpg', image_process_gray)
 
     #Turn Image into B/W Binary using Otsu method
-    (thresh, image_process_bw) = cv2.threshold(image_process_gray, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-    #cv2.imwrite('.preprocess/4_BlackWhite.jpg', image_process_bw)
-
+    (_, image_process_bw) = cv2.threshold(image_process_gray, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 
     #Bounding Box Mask
 
@@ -49,7 +44,7 @@ def ProcessImage(array, image_input):
     upper_width = 100 # Max Width to ~100px
 
     # Loop over the unique components
-    for (i, label) in enumerate(np.unique(labels)):
+    for (_, label) in enumerate(np.unique(labels)):
         # If this is the background label, ignore it
         if label == 0:
             continue
@@ -71,6 +66,8 @@ def ProcessImage(array, image_input):
 
     if not output:
         cv2.imshow('Input Image', image_input)
+        print(f'Cropped with coords {array}')
+        cv2.imshow('Cropped', image_process_crop)
         cv2.imshow('.preprocess/1_Normalize.jpg', image_process_resize)
         cv2.imshow('.preprocess/2_Blur.jpg', image_process_smooth)
         cv2.imshow('.preprocess/3_Grayscale.jpg', image_process_gray)

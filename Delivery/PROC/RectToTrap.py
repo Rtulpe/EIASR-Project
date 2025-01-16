@@ -25,14 +25,23 @@ def RectangleToTrapezoid(image):
         rect = cv2.minAreaRect(merged)
         box = cv2.boxPoints(rect)
         box = np.array(box).astype(int)
-        cv2.drawContours(image, [box], 0, (0, 255, 0), 2)
-        # sorting out coordinate mess
-        results = []
-        results.append(box[1].tolist())
-        results.append(box[2].tolist())
-        results.append(box[0].tolist())
-        results.append(box[3].tolist())
+        
+        height, width = image.shape[:2]
 
+        box[:, 0] = np.clip(box[:, 0], 0, width - 1)
+        box[:, 1] = np.clip(box[:, 1], 0, height - 1)
+
+        results = []
+
+        sorted_points = sorted(box, key=lambda p: (p[1], p[0]))
+        top_two = sorted(sorted_points[:2], key=lambda p: p[0])
+        bottom_two = sorted(sorted_points[2:], key=lambda p: p[0])
+
+        results.append(top_two[0].tolist())
+        results.append(top_two[1].tolist())
+        results.append(bottom_two[0].tolist())
+        results.append(bottom_two[1].tolist())
+        
         return results
 
     print("Failed with given areas: {}".format(debug_area))
