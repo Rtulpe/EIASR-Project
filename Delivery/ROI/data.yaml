@@ -1,0 +1,5 @@
+names:
+  0: car_licence_plate
+nc: 1
+train: /home/rt/webdev/EIASR-Project/Delivery/ROI/Training
+val: /home/rt/webdev/EIASR-Project/Delivery/ROI/Validation
