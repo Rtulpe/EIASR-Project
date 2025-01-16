@@ -8,18 +8,22 @@ from ultralytics import YOLO
 root_dir = os.path.abspath(os.path.dirname(__file__))
 train_path = os.path.join(root_dir, 'Training')
 val_path = os.path.join(root_dir, 'Validation')
+model_path = 'weights.pt'
 
-def train_model(model: YOLO):
-    images_train_glob = glob.glob('Training/images/*.png')
-    annot_train_glob = glob.glob('Training/annotations/*.xml')
-    images_val_glob = glob.glob('Validation/images/*.png')
-    annot_val_glob = glob.glob('Validation/annotations/*.xml')
+def train_model(model: YOLO = None):
+    check_folders()
 
-    print(len(images_train_glob), len(annot_train_glob), len(images_val_glob), len(annot_val_glob))
+    images_train_glob = get_globs('Training/images/*.png')
+    annot_train_glob = get_globs('Training/annotations/*.xml')
+    images_val_glob = get_globs('Validation/images/*.png')
+    annot_val_glob = get_globs('Validation/annotations/*.xml')
 
-    process_anns_file("Training/annotations/Cars0.xml")
+    if model is None:
+        print("Model not found, fetching a new one...")
+        model = YOLO('yolo11s.pt')
 
-    bounding_box_in_yolo_format(134, 128, 262, 160, 400, 248)
+    print("Found {} training images and {} annotations".format(len(images_train_glob), len(annot_train_glob)))
+    print("Found {} validation images and {} annotations".format(len(images_val_glob), len(annot_val_glob)))
 
     shuffle(images_train_glob)
     shuffle(images_val_glob)
@@ -48,8 +52,21 @@ def train_model(model: YOLO):
     with open("data.yaml", "w") as ymlfile:
         yaml.dump(data, ymlfile, default_flow_style=False)
 
-    model_path = 'weights.pt'
-
-    model=YOLO('yolo11s.pt')
     model.train(data='data.yaml',imgsz=320,epochs=85, amp=True)
     model.save(model_path)
+
+
+def check_folders():
+    if not os.path.exists(train_path):
+        raise FileNotFoundError("Training folder not found")
+    if not os.path.exists(val_path):
+        raise FileNotFoundError("Validation folder not found")
+    
+def get_globs(pattern):
+    files = glob.glob(pattern)
+    if not files:
+        raise FileNotFoundError("Nothing found for pattern: {}".format(pattern))
+    return files
+
+
+train_model()

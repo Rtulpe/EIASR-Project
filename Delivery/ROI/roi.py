@@ -25,21 +25,10 @@ class ROI:
             train_model(self.model)
 
     def detect(self, img_path):
-        
+        results = self.model.predict(img_path)
 
+        bbox = []
+        for box in results:
+            bbox.append(box.xyxy.tolist())
 
-sample_dir = "Samples"
-output_dir = "Output"
-output_path = os.path.join(root_dir, output_dir)
-
-all_images = os.listdir(sample_dir)
-
-for img_name in all_images:
-    img_path = os.path.join(sample_dir, img_name)
-
-    results = model.predict(img_path)
-
-    # Print coordinates of detected boxes
-    for box in results[0].boxes:
-        coordinates = box.xyxy.tolist()
-        print(f"Image: {img_name}, Coordinates: {coordinates}")
+        return bbox
