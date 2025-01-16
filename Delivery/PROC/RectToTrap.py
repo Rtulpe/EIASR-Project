@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from dataclasses import dataclass
 
 def RectangleToTrapezoid(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -24,17 +25,17 @@ def RectangleToTrapezoid(image):
         box = cv2.boxPoints(rect)
         box = np.array(box).astype(int)
         cv2.drawContours(image, [box], 0, (0, 255, 0), 2)
-        # get 4 point coordinates as normal integers
-        x1, y1 = box[0]
-        x2, y2 = box[1]
-        x3, y3 = box[2]
-        x4, y4 = box[3]
+        # sorting out coordinate mess
+        results = []
+        results.append(box[1].tolist())
+        results.append(box[2].tolist())
+        results.append(box[0].tolist())
+        results.append(box[3].tolist())
 
-        return (x1, y1), (x2, y2), (x3, y3), (x4, y4)
+        return results
 
 
     return None
-    
 
 
 

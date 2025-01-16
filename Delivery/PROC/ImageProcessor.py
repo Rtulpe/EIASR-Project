@@ -1,27 +1,17 @@
-def ProcessCSVImageArray(array):
-    #Import Packages
-    import numpy as np
-    import cv2
-    import matplotlib.pyplot as plt
-    import os
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+import os
 
-    #Create Output Folder
-    #newpath = r'./.preprocess'
-    #if not os.path.exists(newpath):
-    #    os.makedirs(newpath)
-    #Create Output Folder 2
-    newpath = r'./charout'
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
+def ProcessImage(array, image_input):
+    output = []
 
     #Read Image File
-    image_input = cv2.imread(array[0])
     assert image_input is not None, "file could not be read, check with os.path.exists()"
-    rows,cols,ch = image_input.shape
 
     #Set Coordinate
     ##Currently Manually Set
-    xy  = [[int(array[1]),int(array[2])],[int(array[3]),int(array[4])],[int(array[5]),int(array[6])],[int(array[7]),int(array[8])]]
+    xy = [[int(point[0]), int(point[1])] for point in array]
 
     #Crop Image to Coordinate
     xylength = abs(xy[0][0]-xy[1][0])
@@ -80,33 +70,7 @@ def ProcessCSVImageArray(array):
         if lower < numPixels < upper and w < upper_width:
             mask = cv2.add(mask, labelMask)
             mask2 = image_process_bw[y:y+h,x:x+w]
-            cv2.imwrite('charout/'+array[0]+str(label)+'.jpg', mask2)
-
-    #cv2.imwrite('.preprocess/5_ObjectMask.jpg', mask)
+            output.append(mask2)
 
 
-    #Show Bounding Box
-
-    # Get each bounding box
-    # Find the big contours/blobs on the filtered image:
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-
-    contours_poly = [None] * len(contours)
-    # The Bounding Rectangles will be stored here:
-    boundRect = []
-
-    # Look for the outer bounding boxes:
-    for i, c in enumerate(contours):
-
-        if hierarchy[0][i][3] == -1:
-            contours_poly[i] = cv2.approxPolyDP(c, 3, True)
-            boundRect.append(cv2.boundingRect(contours_poly[i]))
-
-
-    # Draw the bounding boxes on the (copied) input image:
-    for i in range(len(boundRect)):
-        color = (0, 255, 0)
-        cv2.rectangle(image_process_resize, (int(boundRect[i][0]), int(boundRect[i][1])), \
-                (int(boundRect[i][0] + boundRect[i][2]), int(boundRect[i][1] + boundRect[i][3])), color, 2)
-    #cv2.imwrite('.preprocess/6_OriginalMasked.jpg', image_process_resize)
-    #cv2.imwrite('MaskedOutput.jpg', image_process_resize)
+    return output

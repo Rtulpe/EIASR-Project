@@ -17,7 +17,6 @@ def ProcessCSVImageArray(array):
     #Read Image File
     image_input = cv2.imread(array[0])
     assert image_input is not None, "file could not be read, check with os.path.exists()"
-    rows,cols,ch = image_input.shape
 
     #Set Coordinate
     ##Currently Manually Set
@@ -45,7 +44,7 @@ def ProcessCSVImageArray(array):
     #cv2.imwrite('.preprocess/3_Grayscale.jpg', image_process_gray)
 
     #Turn Image into B/W Binary using Otsu method
-    (thresh, image_process_bw) = cv2.threshold(image_process_gray, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+    (_, image_process_bw) = cv2.threshold(image_process_gray, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
     #cv2.imwrite('.preprocess/4_BlackWhite.jpg', image_process_bw)
 
 
