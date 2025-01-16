@@ -2,6 +2,7 @@ import os
 import logging
 from ultralytics import YOLO
 from .training import train_model
+from .helpers import cut_image
 
 class RegionOfInterest:
 
@@ -25,8 +26,14 @@ class RegionOfInterest:
     def detect(self, img_path):
         results = self.model.predict(img_path)
 
-        bbox = []
+        img_list = []
         for box in results[0].boxes:
-            bbox.append(box.xyxy.tolist())
+            blist = box.xyxy.tolist()
+            x1 = int(blist[0][0])
+            y1 = int(blist[0][1])
+            x2 = int(blist[0][2])
+            y2 = int(blist[0][3])
+            print(f"Bounding box: {x1}, {y1}, {x2}, {y2}")
+            img_list.append(cut_image(img_path, x1, y1, x2, y2))
 
-        return bbox
+        return img_list

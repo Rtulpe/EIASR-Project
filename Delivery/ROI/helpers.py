@@ -1,4 +1,5 @@
 from lxml import etree
+import cv2
 
 def bounding_box_in_yolo_format(x1, y1, x2, y2, w, h):
     x1_new = x1/w
@@ -20,3 +21,7 @@ def process_anns_file(ann_file):
     w = doc.find('.//width').text
     h = doc.find('.//height').text
     return int(x1),int(y1),int(x2),int(y2),int(w),int(h)
+
+def cut_image(image_path, x1, y1, x2, y2):
+    img = cv2.imread(image_path)
+    return img[y1:y2, x1:x2]
