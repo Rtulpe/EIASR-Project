@@ -18,6 +18,8 @@ class OCR:
             print("Using newly inited model")
         elif not self.load_model(path_to_model):
             print("Could not find model at " + path_to_model)
+        else:
+            print("OCR model loaded successfully")
 
     def load_model(self, path_to_model: str) -> bool:
         """
@@ -148,5 +150,3 @@ def main():
     # ocr.export_model("models/FirstTest.mdl")
     test_image = cv2.imread("VerificationSet/3.jpg", cv2.IMREAD_GRAYSCALE)
     print(ocr.predict(test_image))
-
-main()
