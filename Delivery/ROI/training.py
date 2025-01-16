@@ -1,7 +1,7 @@
 import os
 from random import shuffle
 import glob
-from helpers import process_anns_file, bounding_box_in_yolo_format
+from .helpers import process_anns_file, bounding_box_in_yolo_format
 import yaml
 from ultralytics import YOLO
 
@@ -75,6 +75,3 @@ def get_globs(pattern):
     if not files:
         raise FileNotFoundError("Nothing found for pattern: {}".format(pattern))
     return files
-
-
-train_model()

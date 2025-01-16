@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from lxml import etree
 
 def bounding_box_in_yolo_format(x1, y1, x2, y2, w, h):

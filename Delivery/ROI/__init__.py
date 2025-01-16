@@ -1,1 +1,1 @@
-from roi import ROI
+from .main import RegionOfInterest

@@ -1,11 +1,9 @@
 import os
 import logging
 from ultralytics import YOLO
-from training import train_model
-import cv2
-import matplotlib.pyplot as plt
+from .training import train_model
 
-class ROI:
+class RegionOfInterest:
 
     model: YOLO
 
@@ -28,7 +26,7 @@ class ROI:
         results = self.model.predict(img_path)
 
         bbox = []
-        for box in results:
+        for box in results[0].boxes:
             bbox.append(box.xyxy.tolist())
 
         return bbox
