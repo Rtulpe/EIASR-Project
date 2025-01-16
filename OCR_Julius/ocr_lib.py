@@ -1,12 +1,12 @@
 import cv2
 import os
 import numpy as np
-import numpy.typing as npt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score
+import pickle
 
 
 class OCR:
@@ -20,10 +20,43 @@ class OCR:
             print("Could not find model at " + path_to_model)
 
     def load_model(self, path_to_model: str) -> bool:
-        print("Implement me")
+        """
+        Imports a previously exported model and saves it as this objects member.
+        :param path_to_model: The relative or absolute path including the filename
+        :return: True if operation was successful
+        """
+        try:
+            self.model = pickle.load(open(path_to_model, 'rb'))
+            return True
+        except FileNotFoundError:
+            print(f"Error: File '{path_to_model}' not found.")
+            return False
+        except IsADirectoryError:
+            print(f"Error: '{path_to_model}' is a directory, not a file.")
+            return False
+        except pickle.UnpicklingError:
+            print(f"Error: File '{path_to_model}' is not a valid pickle file.")
+            return False
+        except EOFError:
+            print(f"Error: File '{path_to_model}' is empty or incomplete.")
+            return False
+        except PermissionError:
+            print(f"Error: Permission denied to read file '{path_to_model}'.")
+            return False
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            return False
 
     def export_model(self, path_to_model: str):
-        print("Implement me")
+        """
+        Dumps the current model as a serialized object
+        :param path_to_model: The relative or absolute path which also contains the file name
+        """
+        directory = os.path.dirname(path_to_model)
+        if directory and not os.path.exists(directory):
+            print(f"Error while exporting model: Directory '{directory}' does not exist.")
+            exit(-1)
+        pickle.dump(self.model, open(path_to_model, 'wb'))
 
     def train_model(self, path_to_training_set: str, test_size=0.2):
         """
@@ -69,11 +102,21 @@ class OCR:
         print(f"Accuracy: {accuracy * 100:.2f}%")
 
     def predict(self, image: cv2.typing.MatLike) -> str:
+        """
+        Extracts features from the given image and uses them to predict the label, given as a character
+        :param image: A cv2.typing.MatLike, which is assumed to be black and white and only of a single character
+        :return: string which is always a single character
+        """
         feature_vector = np.array(self.extract_features(image), dtype=np.float32)
         y_pred = self.model.predict(feature_vector.reshape(1, -1))
         return y_pred[0]
 
     def extract_features(self, image: cv2.typing.MatLike) -> [float]:
+        """
+        Extracts multiple different features if the given image and collects them into a list of numbers
+        :param image: A cv2.typing.MatLike, which is assumed to be black and white and only of a single character
+        :return:
+        """
         image = cv2.resize(image, (50, 90))
         _, binary = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)  # also turn into binary edges
         edges = cv2.Canny(image, 100, 200)  # Find edges
@@ -100,7 +143,9 @@ class OCR:
 
 def main():
     ocr = OCR("")
+    # ocr = OCR("models/FirstTest.mdl")
     ocr.train_model("Dataset/PreBinary/")
+    # ocr.export_model("models/FirstTest.mdl")
     test_image = cv2.imread("VerificationSet/3.jpg", cv2.IMREAD_GRAYSCALE)
     print(ocr.predict(test_image))
 
