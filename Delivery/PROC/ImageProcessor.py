@@ -1,7 +1,5 @@
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
-import os
 
 def ProcessImage(array, image_input):
     output = []
@@ -37,7 +35,6 @@ def ProcessImage(array, image_input):
     #Turn Image into B/W Binary using Otsu method
     (thresh, image_process_bw) = cv2.threshold(image_process_gray, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
     #cv2.imwrite('.preprocess/4_BlackWhite.jpg', image_process_bw)
-
 
 
     #Bounding Box Mask
