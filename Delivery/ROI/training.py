@@ -9,7 +9,7 @@ root_dir = os.path.abspath(os.path.dirname(__file__))
 train_path = os.path.join(root_dir, 'Training')
 val_path = os.path.join(root_dir, 'Validation')
 
-def train_model():
+def train_model(model: YOLO):
     images_train_glob = glob.glob('Training/images/*.png')
     annot_train_glob = glob.glob('Training/annotations/*.xml')
     images_val_glob = glob.glob('Validation/images/*.png')
