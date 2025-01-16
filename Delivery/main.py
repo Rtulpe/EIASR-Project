@@ -34,4 +34,4 @@ for test_img in test_images:
         for o in out:
             number.append(ocr.predict(o))
         
-        print(f"Detected license plate number: {''.join(number)}")
+        print(f"Detected license plate number: {''.join(number)} for image: {test_img}")

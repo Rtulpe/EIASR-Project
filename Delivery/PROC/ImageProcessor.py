@@ -69,5 +69,13 @@ def ProcessImage(array, image_input):
             mask2 = image_process_bw[y:y+h,x:x+w]
             output.append(mask2)
 
+    if not output:
+        cv2.imshow('Input Image', image_input)
+        cv2.imshow('.preprocess/1_Normalize.jpg', image_process_resize)
+        cv2.imshow('.preprocess/2_Blur.jpg', image_process_smooth)
+        cv2.imshow('.preprocess/3_Grayscale.jpg', image_process_gray)
+        cv2.imshow('.preprocess/4_BlackWhite.jpg', image_process_bw)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     return output

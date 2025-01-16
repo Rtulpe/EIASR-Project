@@ -5,17 +5,19 @@ def RectangleToTrapezoid(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     _, binary = cv2.threshold(blurred, 120, 255, cv2.THRESH_BINARY)
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    morph = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
 
-    contours, _ = cv2.findContours(morph, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     large_contours = []
+    # Used in case of failure
+    debug_area = []
 
     # Sometimes the biggest contour is only a part of the license plate
     # Thus, merging all the big contours should gives us the entire plate
     for c in contours:
         area = cv2.contourArea(c)
-        if area > 1000:
+        debug_area.append(area)
+
+        if area > 500:
             large_contours.append(c)
 
     if large_contours:
@@ -33,7 +35,11 @@ def RectangleToTrapezoid(image):
 
         return results
 
-
+    print("Failed with given areas: {}".format(debug_area))
+    cv2.imshow("R2T Image", image)
+    cv2.imshow("R2T Binary", binary)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return None
 
 
