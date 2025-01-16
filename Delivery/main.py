@@ -10,20 +10,24 @@ test_images = glob.glob(os.path.join(root_dir, 'Test_Data', '*.jpg'))
 roi = RegionOfInterest()
 ocr = OCR("FirstTest.mdl")
 
-for test_img in test_images[0]:
+for test_img in test_images:
 
     regions = roi.detect(test_img)
     if not regions:
-        print("No license plate detected")
+        print(f"{test_img}: Failed ROI detection")
         break
 
     for r in regions:
         coords = RectangleToTrapezoid(r)
-        print(f"Detected license plate coordinates: {coords}")
+
+        if not coords:
+            print(f"{test_img}: Failed to convert rectangle to trapezoid")
+            break
+
         out = ProcessImage(coords, r)
 
         if not out:
-            print(f"Error processing image: {test_img}")
+            print(f"{test_img}: Failed to process image")
             break
 
         number = []

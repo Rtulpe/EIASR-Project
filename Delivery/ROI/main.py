@@ -33,7 +33,6 @@ class RegionOfInterest:
             y1 = int(blist[0][1])
             x2 = int(blist[0][2])
             y2 = int(blist[0][3])
-            print(f"Bounding box: {x1}, {y1}, {x2}, {y2}")
             img_list.append(cut_image(img_path, x1, y1, x2, y2))
 
         return img_list
