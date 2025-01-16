@@ -15,7 +15,7 @@ def RectangleToTrapezoid(image):
     # Thus, merging all the big contours should gives us the entire plate
     for c in contours:
         area = cv2.contourArea(c)
-        if area > 2000:
+        if area > 1000:
             large_contours.append(c)
 
     if large_contours:
