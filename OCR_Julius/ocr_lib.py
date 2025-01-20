@@ -104,7 +104,7 @@ class OCR:
 
         # Split depending on argument
         x_train, x_test, y_train, y_test = train_test_split(standardized_data, labels, test_size=test_size,
-                                                            shuffle=True, random_state=42)
+                                                            shuffle=True, random_state=69)
 
         # Train the classifier
         self.model.fit(x_train, y_train)
@@ -157,10 +157,14 @@ class OCR:
 
 def main():
     # ocr = OCR("")
-    ocr = OCR("models/SecondTest.mdl")
+    ocr = OCR("models/FinalTrained.mdl")
     # ocr.train_model("Dataset/PreBinary/")
-    # ocr.export_model("models/SecondTest.mdl")
+    # ocr.export_model("models/FinalTrained.mdl")
     test_image = cv2.imread("VerificationSet/3.jpg", cv2.IMREAD_GRAYSCALE)
+    print(ocr.predict(test_image))
+    test_image = cv2.imread("VerificationSet/P.jpg", cv2.IMREAD_GRAYSCALE)
+    print(ocr.predict(test_image))
+    test_image = cv2.imread("VerificationSet/Y.jpg", cv2.IMREAD_GRAYSCALE)
     print(ocr.predict(test_image))
 
 main()
