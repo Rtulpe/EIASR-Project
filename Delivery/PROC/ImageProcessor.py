@@ -70,7 +70,23 @@ def ProcessImage(array, image_input, verbose=True):
         if lower < numPixels < upper and w < upper_width:
             mask = cv2.add(mask, labelMask)
             mask2 = image_process_bw[y:y+h,x:x+w]
-            output.append(mask2)
+            output_unordered.append(mask2)
+
+    #REORDER CHARACTERS
+    #function to get the first element
+    def takeFirstElm(ele):
+        return ele[0]
+
+    #function to order the array using the first element(x-axis)
+    def reorder_first_index(list):
+    return sorted(list,key=takeFirstElm)
+
+    ordered_elements = reorder_first_index(output_unordered)
+
+    #removing the x-axis from the elements
+    output=[]
+    for element in ordered_elements:
+    output.append(element[1])# appending only the image pixels(removing added index in earlier steps)
 
     if not output:
         # Provide feedback if no character is found
