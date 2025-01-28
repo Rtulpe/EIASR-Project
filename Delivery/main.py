@@ -15,20 +15,20 @@ for test_img in test_images:
     regions = roi.detect(test_img)
     if not regions:
         print(f"{test_img}: Failed ROI detection")
-        break
+        continue
 
     for r in regions:
         coords = RectangleToTrapezoid(r)
 
         if not coords:
             print(f"{test_img}: Failed to convert rectangle to trapezoid")
-            break
+            continue
 
         out = ProcessImage(coords, r)
 
         if not out:
             print(f"{test_img}: Failed to process image")
-            break
+            continue
 
         number = []
         for o in out:
