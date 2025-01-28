@@ -11,7 +11,7 @@ char_gen_dir = os.path.join(root_dir, 'Generated_Characters')
 '''
 def ProcessImage(array, image_input, verbose=True):
     output = []
-    output_unordered = []
+    output_unordered=[]
 
     #Read Image File
     assert image_input is not None, "file could not be read, check with os.path.exists()"
@@ -71,7 +71,7 @@ def ProcessImage(array, image_input, verbose=True):
         if lower < numPixels < upper and w < upper_width:
             mask = cv2.add(mask, labelMask)
             mask2 = image_process_bw[y:y+h,x:x+w]
-            output_unordered.append(mask2)
+            output_unordered.append((x,mask2))
 
     #REORDER CHARACTERS
     #function to get the first element
@@ -82,28 +82,28 @@ def ProcessImage(array, image_input, verbose=True):
     def reorder_first_index(list):
         return sorted(list,key=takeFirstElm)
 
-        ordered_elements = reorder_first_index(output_unordered)
+    ordered_elements = reorder_first_index(output_unordered)
 
-        #removing the x-axis from the elements
-        output=[]
-        for element in ordered_elements:
-            output.append(element[1])# appending only the image pixels(removing added index in earlier steps)
+    #removing the x-axis from the elements
+    for element in ordered_elements:
+        output.append(element[1])# appending only the image pixels(removing added index in earlier steps)
 
-            if not output:
-                # Provide feedback if no character is found
-                # If "Verbose" is set to False, this will be skipped
-                if verbose:
-                    cv2.imshow('Input Image', image_input)
-                    print(f'Cropped with coords {array}')
-                    cv2.imshow('Cropped', image_process_crop)
-                    cv2.imshow('.preprocess/1_Normalize.jpg', image_process_resize)
-                    cv2.imshow('.preprocess/2_Blur.jpg', image_process_smooth)
-                    cv2.imshow('.preprocess/3_Grayscale.jpg', image_process_gray)
-                    cv2.imshow('.preprocess/4_BlackWhite.jpg', image_process_bw)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
 
-            return output
+    if not output:
+        # Provide feedback if no character is found
+        # If "Verbose" is set to False, this will be skipped
+        if verbose:
+            cv2.imshow('Input Image', image_input)
+            print(f'Cropped with coords {array}')
+            cv2.imshow('Cropped', image_process_crop)
+            cv2.imshow('.preprocess/1_Normalize.jpg', image_process_resize)
+            cv2.imshow('.preprocess/2_Blur.jpg', image_process_smooth)
+            cv2.imshow('.preprocess/3_Grayscale.jpg', image_process_gray)
+            cv2.imshow('.preprocess/4_BlackWhite.jpg', image_process_bw)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+    return output
 
 '''
     Function to generate characters from the given images
@@ -122,4 +122,4 @@ def generate_characters(array, image_input, label):
 
     for i, o in enumerate(out):
         cv2.imwrite(os.path.join(char_gen_dir, f'{label}_{i}.jpg'), o)
-    
+
