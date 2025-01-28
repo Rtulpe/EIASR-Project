@@ -1,6 +1,6 @@
 import os
 from ROI import RegionOfInterest
-from PROC import RectangleToTrapezoid, ProcessImage
+from PROC import RectangleToTrapezoid, ProcessImage, PlateAnalyseInput
 from OCR import OCR
 import glob
 
@@ -33,5 +33,10 @@ for test_img in test_images:
         number = []
         for o in out:
             number.append(ocr.predict(o))
+
+        fullPlate = ''.join(number)
         
-        print(f"Detected license plate number: {''.join(number)} for image: {test_img}")
+        print(f"Detected license plate number: {fullPlate} for image: {test_img}")
+
+        plateInfo=PlateAnalyseInput(fullPlate)
+        print(plateInfo)
