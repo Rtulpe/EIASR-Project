@@ -13,7 +13,7 @@ class OCR:
     training_mean = 0
     training_std = 1
 
-    def __init__(self, path_to_model: str):
+    def __init__(self, path_to_model: str = None):
         if path_to_model is None or path_to_model == "":
             print("Using newly inited model")
         elif not self.load_model(path_to_model):
