@@ -8,7 +8,7 @@ root_dir = root_dir = os.path.abspath(os.path.dirname(__file__))
 test_images = glob.glob(os.path.join(root_dir, 'Test_Data', '*.jpg'))
 
 roi = RegionOfInterest()
-ocr = OCR("FirstTest.mdl")
+ocr = OCR("FinalTrained.mdl")
 
 for test_img in test_images:
 

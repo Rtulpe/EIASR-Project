@@ -12,14 +12,14 @@ import pickle
 class OCR:
     # model = KNeighborsClassifier(n_neighbors=3) # Got better results with OneVsOne
     model = OneVsOneClassifier(LinearSVC(random_state=0))
+    training_mean = 0
+    training_std = 1
 
     def __init__(self, path_to_model: str):
         if path_to_model is None or path_to_model == "":
             print("Using newly inited model")
         elif not self.load_model(path_to_model):
             print("Could not find model at " + path_to_model)
-        else:
-            print("OCR model loaded successfully")
 
     def load_model(self, path_to_model: str) -> bool:
         """
@@ -28,7 +28,10 @@ class OCR:
         :return: True if operation was successful
         """
         try:
-            self.model = pickle.load(open(path_to_model, 'rb'))
+            loaded_data = pickle.load(open(path_to_model, 'rb'))
+            self.model = loaded_data["model"]
+            self.training_mean = loaded_data["mean"]
+            self.training_std = loaded_data["std"]
             return True
         except FileNotFoundError:
             print(f"Error: File '{path_to_model}' not found.")
@@ -58,7 +61,12 @@ class OCR:
         if directory and not os.path.exists(directory):
             print(f"Error while exporting model: Directory '{directory}' does not exist.")
             exit(-1)
-        pickle.dump(self.model, open(path_to_model, 'wb'))
+        data_to_save = {
+            "model": self.model,
+            "mean": self.training_mean,
+            "std": self.training_std
+        }
+        pickle.dump(data_to_save, open(path_to_model, 'wb'))
 
     def train_model(self, path_to_training_set: str, test_size=0.2):
         """
@@ -89,11 +97,14 @@ class OCR:
         features = np.array(features, dtype=np.float32)
         labels = np.array(labels)
 
-        # TODO: Features need to be normalized/standardized (mean=0, sigma=1)
+        # Standardize the data
+        self.training_mean = np.mean(features, axis=0)
+        self.training_std = np.std(features, axis=0)
+        standardized_data = (features - self.training_mean) / self.training_std
 
-        # Split depending on argument # TODO: Check what happens, if it is zero
-        x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=test_size,
-                                                            shuffle=True, random_state=42)
+        # Split depending on argument
+        x_train, x_test, y_train, y_test = train_test_split(standardized_data, labels, test_size=test_size,
+                                                            shuffle=True, random_state=69)
 
         # Train the classifier
         self.model.fit(x_train, y_train)
@@ -110,7 +121,8 @@ class OCR:
         :return: string which is always a single character
         """
         feature_vector = np.array(self.extract_features(image), dtype=np.float32)
-        y_pred = self.model.predict(feature_vector.reshape(1, -1))
+        standardized_data = (feature_vector - self.training_mean) / self.training_std
+        y_pred = self.model.predict(standardized_data.reshape(1, -1))
         return y_pred[0]
 
     def extract_features(self, image: cv2.typing.MatLike) -> [float]:
@@ -144,9 +156,4 @@ class OCR:
 
 
 def main():
-    ocr = OCR("")
-    # ocr = OCR("models/FirstTest.mdl")
-    ocr.train_model("Dataset/PreBinary/")
-    # ocr.export_model("models/FirstTest.mdl")
-    test_image = cv2.imread("VerificationSet/3.jpg", cv2.IMREAD_GRAYSCALE)
-    print(ocr.predict(test_image))
+    ocr = OCR("FinalTrained.mdl")
