@@ -2,7 +2,6 @@ import cv2
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score
@@ -10,7 +9,6 @@ import pickle
 
 
 class OCR:
-    # model = KNeighborsClassifier(n_neighbors=3) # Got better results with OneVsOne
     model = OneVsOneClassifier(LinearSVC(random_state=0))
     training_mean = 0
     training_std = 1
