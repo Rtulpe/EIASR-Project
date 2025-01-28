@@ -17,14 +17,14 @@ for test_img in test_images:
     regions = roi.detect(test_img)
     if not regions:
         print(f"{test_img}: Failed ROI detection")
-        break
+        continue
 
     for idr, r in enumerate(regions):
         coords = RectangleToTrapezoid(r, verbose=False)
 
         if not coords:
             print(f"{test_img}: Failed to convert rectangle to trapezoid")
-            break
+            continue
 
         
         label = test_img.split('/')[-1].split('.')[0]
