@@ -20,3 +20,4 @@ python (or) python3 main.py
 # Important notes:
 - The main script takes the input from Test_Data folder, thus make sure to put images of .jpg format in the folder.
 - The code submitted in the package does not contain the data used for training. The full code with data can be found in the Google Drive [link](https://drive.google.com/file/d/16pXDO1AGnsX4Z1Ec4z7FBlDJK-i5x__1/view?usp=drive_link)
+- Detailed Region of Interest (ROI) training information can be found at the following [folder](/runs/detect/)
