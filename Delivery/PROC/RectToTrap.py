@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 '''
     Converting the rectangle license plate cutout to a trapezoid
@@ -24,6 +25,9 @@ def RectangleToTrapezoid(image, verbose=True):
         if area > 500:
             large_contours.append(c)
 
+    plt.imshow(image)
+    plt.imshow(binary)
+
     # If any large contours were found, merge them and find the bounding rectangle
     if large_contours:
         merged = np.vstack(large_contours)
@@ -46,15 +50,16 @@ def RectangleToTrapezoid(image, verbose=True):
         results.append(top_two[1].tolist())
         results.append(bottom_two[0].tolist())
         results.append(bottom_two[1].tolist())
+
+        cont_image = image.copy()
+        cv2.drawContours(cont_image, [box], 0, (0, 0, 255), 2)
+        plt.imshow(cont_image)
         
         return results
 
     if verbose:
         print("Failed with given areas: {}".format(debug_area))
-        cv2.imshow("R2T Image", image)
-        cv2.imshow("R2T Binary", binary)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+
     return None
 
 

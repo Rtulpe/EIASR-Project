@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import os
+import matplotlib.pyplot as plt
 
 root_dir = os.path.abspath(os.path.dirname(__file__))
 char_gen_dir = os.path.join(root_dir, 'Generated_Characters')
@@ -88,20 +89,18 @@ def ProcessImage(array, image_input, verbose=True):
     for element in ordered_elements:
         output.append(element[1])# appending only the image pixels(removing added index in earlier steps)
 
+    plt.imshow(image_input)
+    plt.imshow(image_process_crop)
+    plt.imshow(image_process_resize)
+    plt.imshow(image_process_smooth)
+    plt.imshow(image_process_gray)
+    plt.imshow(image_process_bw)
 
     if not output:
         # Provide feedback if no character is found
         # If "Verbose" is set to False, this will be skipped
         if verbose:
-            cv2.imshow('Input Image', image_input)
-            print(f'Cropped with coords {array}')
-            cv2.imshow('Cropped', image_process_crop)
-            cv2.imshow('.preprocess/1_Normalize.jpg', image_process_resize)
-            cv2.imshow('.preprocess/2_Blur.jpg', image_process_smooth)
-            cv2.imshow('.preprocess/3_Grayscale.jpg', image_process_gray)
-            cv2.imshow('.preprocess/4_BlackWhite.jpg', image_process_bw)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            print("Image Processor: No characters found")
 
     return output
 

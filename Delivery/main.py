@@ -1,38 +1,32 @@
-import os
 from ROI import RegionOfInterest
 from PROC import RectangleToTrapezoid, ProcessImage, PlateAnalyseInput
 from OCR import OCR
-import glob
+import argparse
 
 '''
     Main script to run the license plate detection, recognition and identification pipeline
     Authors: Rustenis, Julius, Abraham
 '''
+def main(image_path):
+    roi = RegionOfInterest()
+    ocr = OCR("ReallyFinalModel.mdl")
 
-root_dir = root_dir = os.path.abspath(os.path.dirname(__file__))
-test_images = glob.glob(os.path.join(root_dir, 'Test_Data', '*.jpg'))
-
-roi = RegionOfInterest()
-ocr = OCR("ReallyFinalModel.mdl")
-
-for test_img in test_images:
-
-    regions = roi.detect(test_img)
+    regions = roi.detect(image_path)
     if not regions:
-        print(f"{test_img}: Failed ROI detection")
-        continue
+        print(f"{image_path}: Failed ROI detection")
+        return
 
     for r in regions:
         coords = RectangleToTrapezoid(r)
 
         if not coords:
-            print(f"{test_img}: Failed to convert rectangle to trapezoid")
+            print(f"{image_path}: Failed to convert rectangle to trapezoid")
             continue
 
         out = ProcessImage(coords, r)
 
         if not out:
-            print(f"{test_img}: Failed to process image")
+            print(f"{image_path}: Failed to process image")
             continue
 
         number = []
@@ -41,7 +35,16 @@ for test_img in test_images:
 
         fullPlate = ''.join(number)
         
-        print(f"Detected license plate number: {fullPlate} for image: {test_img}")
+        print(f"Detected license plate number: {fullPlate} for image: {image_path}")
 
         plateInfo=PlateAnalyseInput(fullPlate)
         print(plateInfo)
+
+
+# Argument parsing directly in the script
+parser = argparse.ArgumentParser(description="Run main with an image path.")
+parser.add_argument("image_path", type=str, help="Path to the image file")
+args = parser.parse_args()
+
+# Call main with the image path passed as argument
+main(args.image_path)
