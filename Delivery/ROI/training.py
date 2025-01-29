@@ -14,6 +14,8 @@ yaml_path = os.path.join(root_dir, 'data.yaml')
 '''
     Training the YOLO model
     Author: Rustenis
+    Code adapted from:
+    https://www.kaggle.com/code/myriamgam62/car-licence-plate-detection-avec-yolo11
 '''
 def train_model(model: YOLO = None):
     check_folders()
@@ -62,7 +64,6 @@ def train_model(model: YOLO = None):
 
     model.train(data=yaml_path,imgsz=320,epochs=85, amp=True)
     model.save(model_path)
-
 
 def check_folders():
     if not os.path.exists(train_path):
