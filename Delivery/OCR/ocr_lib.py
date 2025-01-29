@@ -111,9 +111,12 @@ class OCR:
         self.model.fit(x_train, y_train)
 
         # Predict labels for the test set and evaluate
+        y_train_pred = self.model.predict(x_train)
+        accuracy = accuracy_score(y_train, y_train_pred)
+        print(f"Training Accuracy: {accuracy * 100:.2f}%")
         y_pred = self.model.predict(x_test)
         accuracy = accuracy_score(y_test, y_pred)
-        print(f"Accuracy: {accuracy * 100:.2f}%")
+        print(f"Validation Accuracy: {accuracy * 100:.2f}%")
 
     def predict(self, image: cv2.typing.MatLike) -> str:
         """
@@ -138,8 +141,6 @@ class OCR:
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # only external contours
         if contours:  # There might not be any
             contour = max(contours, key=cv2.contourArea)  # Assume the largest contour corresponds to the letter/number
-            # TODO: Check assumption for things like W
-
             # Compute features
             area = cv2.contourArea(contour)
             normalized_area = area / (image.shape[0] * image.shape[1])
