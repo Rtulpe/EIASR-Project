@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 
+'''
+    Converting the rectangle license plate cutout to a trapezoid
+    Author: Rustenis
+'''
 def RectangleToTrapezoid(image, verbose=True):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -20,6 +24,7 @@ def RectangleToTrapezoid(image, verbose=True):
         if area > 500:
             large_contours.append(c)
 
+    # If any large contours were found, merge them and find the bounding rectangle
     if large_contours:
         merged = np.vstack(large_contours)
         rect = cv2.minAreaRect(merged)

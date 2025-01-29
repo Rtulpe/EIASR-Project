@@ -7,7 +7,10 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score
 import pickle
 
-
+'''
+    Optical Character Recognition library
+    Author: Julius
+'''
 class OCR:
     model = OneVsOneClassifier(LinearSVC(random_state=0))
     training_mean = 0

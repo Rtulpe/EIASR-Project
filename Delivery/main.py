@@ -4,6 +4,11 @@ from PROC import RectangleToTrapezoid, ProcessImage, PlateAnalyseInput
 from OCR import OCR
 import glob
 
+'''
+    Main script to run the license plate detection, recognition and identification pipeline
+    Authors: Rustenis, Julius, Abraham
+'''
+
 root_dir = root_dir = os.path.abspath(os.path.dirname(__file__))
 test_images = glob.glob(os.path.join(root_dir, 'Test_Data', '*.jpg'))
 

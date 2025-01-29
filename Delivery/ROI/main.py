@@ -4,6 +4,11 @@ from ultralytics import YOLO
 from .training import train_model
 from .helpers import cut_image
 
+'''
+    Region of Interest class
+    Used to detect and cut out license plates from images
+    Author: Rustenis
+'''
 class RegionOfInterest:
 
     model: YOLO

@@ -1,6 +1,7 @@
 '''
     Script to generate characters from the given images
     Used for OCR training
+    Author: Rustenis
 '''
 import os
 from ROI import RegionOfInterest

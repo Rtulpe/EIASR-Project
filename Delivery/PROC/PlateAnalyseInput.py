@@ -75,7 +75,7 @@ class PlateData:
             0: "Undefined",
             1: "Cars, trucks, and buses",
             2: "Motorcycles, mopeds, and agricultural vehicles",
-            3: "Cars – reduced size",
+            3: "Cars - reduced size",
             4: "Classic cars",
             5: "Temporary and export plates",
             6: "Custom plates",

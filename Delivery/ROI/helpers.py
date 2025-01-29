@@ -1,6 +1,10 @@
 from lxml import etree
 import cv2
 
+'''
+    Helper functions for the ROI module
+    Author: Rustenis
+'''
 def bounding_box_in_yolo_format(x1, y1, x2, y2, w, h):
     x1_new = x1/w
     x2_new = x2/w

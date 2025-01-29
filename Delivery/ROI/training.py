@@ -11,6 +11,10 @@ val_path = os.path.join(root_dir, 'Validation')
 model_path = os.path.join(root_dir, 'weights.pt')
 yaml_path = os.path.join(root_dir, 'data.yaml')
 
+'''
+    Training the YOLO model
+    Author: Rustenis
+'''
 def train_model(model: YOLO = None):
     check_folders()
 
